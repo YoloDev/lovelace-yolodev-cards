@@ -44,7 +44,7 @@ const tailwindPlugin = {
 };
 
 const ctx = await context({
-	entryPoints: ["./src/cards.tsx"],
+	entryPoints: ["./src/yolodev-cards.tsx"],
 	bundle: true,
 	outdir: "dist/",
 	plugins: [solidPlugin(), tailwindPlugin],
