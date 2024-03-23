@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+		"moduleResolution": "Bundler",
+		"target": "ES2022",
+		"module": "ESNext",
+		"jsx": "preserve",
+		"jsxImportSource": "solid-js",
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"strict": true
+	}
+}
