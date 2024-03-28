@@ -1,13 +1,13 @@
-import { context } from "esbuild";
+import { context, type Plugin } from "esbuild";
 import { solidPlugin } from "esbuild-plugin-solid";
-import chalk from "chalk";
 import postcss from "postcss";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
+
 const require = createRequire(import.meta.url);
 
-const tailwindPlugin = {
+const tailwindPlugin: Plugin = {
 	name: "tailwind",
 	setup: (build) => {
 		const processor = postcss([require("@tailwindcss/postcss")()]);

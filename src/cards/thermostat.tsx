@@ -180,6 +180,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 					"state-fan_only": entity.state === "fan_only",
 					"state-heat": entity.state === "heat",
 					"state-heat-cool": entity.state === "heat-cool",
+					"state-unavailable": entity.state === "unavailable",
 					active: isActive(),
 				}}
 			>

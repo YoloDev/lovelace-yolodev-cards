@@ -511,6 +511,7 @@
 			var(--active-state-color) 50%,
 			transparent
 		);
+		--icon-color: currentColor;
 
 		&.state-auto {
 			--active-state-color: var(--state-climate-auto-color);
@@ -538,11 +539,18 @@
 
 		&.active {
 			--state-color: var(--active-state-color);
+			--icon-color: var(--active-state-color);
+		}
+
+		&.state-unavailable {
+			--active-state-color: var(--state-unavailable-color);
+			--state-color: var(--state-unavailable-color);
+			--icon-color: var(--state-unavailable-color);
 		}
 	}
 
 	.thermostat-icon {
-		color: var(--state-color);
+		color: var(--icon-color);
 	}
 
 	.control-slider {
