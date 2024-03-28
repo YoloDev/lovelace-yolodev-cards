@@ -43,14 +43,18 @@ const tailwindPlugin: Plugin = {
 	},
 };
 
-const ctx = await context({
-	entryPoints: ["./src/yolodev-cards.tsx"],
-	bundle: true,
-	outdir: "dist/",
-	plugins: [solidPlugin(), tailwindPlugin],
-	sourcemap: "external",
-	splitting: true,
-	format: "esm",
-});
+const createContext = async (...extraPlugins: Plugin[]) => {
+	const ctx = await context({
+		entryPoints: ["./src/yolodev-cards.tsx"],
+		bundle: true,
+		outdir: "dist/",
+		plugins: [solidPlugin(), tailwindPlugin, ...extraPlugins],
+		sourcemap: "external",
+		splitting: true,
+		format: "esm",
+	});
 
-export default ctx;
+	return ctx;
+};
+
+export default createContext;

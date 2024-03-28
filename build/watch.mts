@@ -1,4 +1,4 @@
-import ctx from "./context.mjs";
+import createContext from "./context.mjs";
 import chalk from "chalk";
 import { loadEnv, requireEnv } from "./env.mjs";
 import open from "open";
@@ -8,9 +8,20 @@ loadEnv("watch", true);
 
 const homeAssistantUrl = new URL(requireEnv("HOME_ASSISTANT_URL"));
 const replaceAddress = Buffer.from(requireEnv("HOME_ASSISTANT_RESOURCE_URL"));
-const replaceAddressWith = Buffer.from(
-	"http://localhost:3000/.esbuild/yolodev-cards.js",
+let replaceAddressWith = Buffer.from(
+	`http://localhost:3000/.esbuild/yolodev-cards.js?_v=${Date.now()}`,
 );
+
+const ctx = await createContext({
+	name: "update-replacement-url",
+	setup: (build) => {
+		build.onEnd((_) => {
+			replaceAddressWith = Buffer.from(
+				`http://localhost:3000/.esbuild/yolodev-cards.js?_v=${Date.now()}`,
+			);
+		});
+	},
+});
 
 const esbuildServer = await ctx.serve({
 	port: 0,
@@ -53,6 +64,7 @@ proxy.onWebSocketMessage(
 			return callback(null, message, isBinary);
 		}
 
+		const replacement = replaceAddressWith;
 		while (true) {
 			const index = message.indexOf(replaceAddress);
 			if (index === -1) {
@@ -62,10 +74,10 @@ proxy.onWebSocketMessage(
 			message = Buffer.concat(
 				[
 					message.subarray(0, index),
-					replaceAddressWith,
+					replacement,
 					message.subarray(index + replaceAddress.length),
 				],
-				message.length + replaceAddressWith.length - replaceAddress.length,
+				message.length + replacement.length - replaceAddress.length,
 			);
 		}
 

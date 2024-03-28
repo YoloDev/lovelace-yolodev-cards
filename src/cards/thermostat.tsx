@@ -239,8 +239,3 @@ registerCard(
 	},
 	ThermostatCard,
 );
-
-function debug<T>(v: T): T {
-	debugger;
-	return v;
-}
