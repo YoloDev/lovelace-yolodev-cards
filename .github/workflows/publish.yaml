@@ -16,7 +16,7 @@ jobs:
         with:
           version: 8
       - run: pnpm install --frozen-lockfile
-      - run: node ./build/build.mjs
+      - run: pnpm run build
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
