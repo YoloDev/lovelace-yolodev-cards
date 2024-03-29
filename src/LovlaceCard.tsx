@@ -146,6 +146,7 @@ export abstract class LovelaceCard<
 		createRoot((dispose) => {
 			this.#dispose = dispose;
 
+			const [cssLoaded, setCssLoaded] = createSignal(false);
 			const ready = createMemo(() => this.ready());
 			const css = createMemo(() => {
 				const value = this.css();
@@ -158,9 +159,13 @@ export abstract class LovelaceCard<
 
 			const element = (
 				<>
-					<Show when={ready}>{this.render()}</Show>
+					<Show when={ready() && cssLoaded()}>{this.render()}</Show>
 					{css()}
-					<link rel="stylesheet" href={cssPath} />
+					<link
+						rel="stylesheet"
+						href={cssPath}
+						on:load={() => setCssLoaded(true)}
+					/>
 				</>
 			);
 
