@@ -505,7 +505,7 @@
 	@tailwind utilities;
 
 	.thermostat-card {
-		--active-state-color: var(--color-icon);
+		--active-state-color: var(--state-climate-off-color);
 		--state-color: color-mix(
 			in srgb,
 			var(--active-state-color) 50%,
@@ -574,6 +574,7 @@
 
 	.control-slider {
 		--control-slider-color: var(--state-color);
+		--control-slider-tooltip-font-size: 18px;
 	}
 
 	.active .thermostat-setpoint {
