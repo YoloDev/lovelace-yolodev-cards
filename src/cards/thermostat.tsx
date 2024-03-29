@@ -134,7 +134,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 			.map((value) => {
 				return (
 					<>
-						<dt class="m-0">Floor</dt>
+						<dt class="m-0">Gulv</dt>
 						<dl class="m-0">{value} °C</dl>
 					</>
 				);
@@ -184,10 +184,10 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 					active: isActive(),
 				}}
 			>
-				<header class="flex gap-2 items-center pt-6 pb-4 px-4">
+				<header class="flex gap-2 items-center pt-6 pb-1 md:pb-4 px-4">
 					<ha-icon
 						icon="mdi:heat-wave"
-						class="flex-none transition-colors duration-1000 thermostat-icon cursor-pointer"
+						class="flex-none transition-colors duration-500 thermostat-icon cursor-pointer"
 						on:click={openMoreInfo}
 					/>
 					<h2
@@ -198,21 +198,21 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 					</h2>
 					<div class="flex-none">{toggle.value}</div>
 				</header>
-				<section class="flex items-center p-4">
-					<dl class="flex-none grid auto-rows-fr grid-cols-2 gap-2">
-						<dt class="m-0">Current</dt>
+				<section class="flex items-center px-4 py-1 md:p-4 ">
+					<dl class="flex-none grid auto-rows-fr grid-cols-2 gap-y-0 gap-x-2 mt-0 mb-0">
+						<dt class="m-0">Rom</dt>
 						<dl class="m-0">{currentTemp.value} °C</dl>
 						{floorTemp.value}
-						<dt class="m-0">State</dt>
-						<dl class="m-0">{hvacAction.value}</dl>
+						{/* <dt class="m-0">State</dt>
+						<dl class="m-0">{hvacAction.value}</dl> */}
 					</dl>
-					<span class="block flex-auto text-title font-normal p-6 text-right">
+					<span class="block flex-auto text-title font-normal px-6 py-2 text-right thermostat-setpoint transition-colors duration-500">
 						<span class="text-setpoint">{setPoint.value}</span> <span>°C</span>
 					</span>
 				</section>
-				<section class="p-4">
+				<section class="px-4 pt-1 pb-4 md:p-4">
 					<ha-control-slider
-						class="transition-colors duration-1000 control-slider"
+						class="transition-colors duration-500 control-slider"
 						unit="°C"
 						value={slider.value?.setPoint}
 						step={slider.value?.stepSize}
