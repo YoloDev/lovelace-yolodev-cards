@@ -23,6 +23,7 @@ jobs:
 
   # Deploy job
   deploy:
+    name: Deploy
     # Add a dependency to the build job
     needs: build
 
