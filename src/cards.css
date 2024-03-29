@@ -511,7 +511,16 @@
 			var(--active-state-color) 50%,
 			transparent
 		);
-		--icon-color: currentColor;
+		--icon-color: color-mix(
+			in srgb,
+			currentColor 20%,
+			transparent
+		);
+		--setpoint-color: currentColor;
+		
+		.text-setpoint {
+			color: currentColor;
+		}		
 
 		&.state-auto {
 			--active-state-color: var(--state-climate-auto-color);
@@ -540,6 +549,16 @@
 		&.active {
 			--state-color: var(--active-state-color);
 			--icon-color: var(--active-state-color);
+			--setpoint-color: var(--active-state-color);
+			--setpoint-color: var(--state-color);			
+			background: radial-gradient(
+				circle at right,
+				color-mix(
+					in srgb,
+					var(--state-color) 30%,
+					transparent
+				), 
+				transparent 50%);
 		}
 
 		&.state-unavailable {
@@ -555,5 +574,9 @@
 
 	.control-slider {
 		--control-slider-color: var(--state-color);
+	}
+
+	.active .thermostat-setpoint {
+		color: var(--setpoint-color);
 	}
 }
