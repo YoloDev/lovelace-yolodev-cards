@@ -174,6 +174,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 			<ha-card
 				classList={{
 					"thermostat-card": true,
+					"state-off": entity.state === "off",
 					"state-auto": entity.state === "auto",
 					"state-cool": entity.state === "cool",
 					"state-dry": entity.state === "dry",
