@@ -1,0 +1,45 @@
+current:
+  en: "Current"
+  nb: "Nåværende"
+
+floor:
+  en: "Floor"
+  nb: "Gulv"
+
+state:
+  en: State
+  nb: Tilstand
+
+state_value:
+  en: |
+    .input {$state :string}
+    .match {$state}
+    idle {{Idle}}
+    heating {{Heating}}
+    cooling {{Cooling}}
+    off {{Off}}
+    * {{{$state}}}
+  nb: |
+    .input {$state :string}
+    .match {$state}
+    idle {{Idle}}
+    heating {{Varmer}}
+    cooling {{Kjøler}}
+    off {{Av}}
+    * {{{$state}}}
+
+editor_entity:
+  en: "Entity"
+  nb: "Enhet"
+
+editor_name:
+  en: "Name (Optional)"
+  nb: "Navn (valgfritt)"
+
+editor_toggle_entity:
+  en: "Toggle Entity (Optional)"
+  nb: "Av/paa Enhet (valgfritt)"
+
+editor_floor_temp_entity:
+  en: "Floor Temperature Entity (Optional)"
+  nb: "Gulvtemperatur Enhet (valgfritt)"

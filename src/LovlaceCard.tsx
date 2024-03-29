@@ -38,6 +38,7 @@ export abstract class LovelaceCard<
 		createSignal<HomeAssistant | null>(null);
 	readonly #configSignal = createSignal<Config>();
 	readonly #attributeSignals: Map<string, Signal<string | null>> = new Map();
+	readonly #locale: Accessor<string | undefined>;
 
 	#dispose: null | (() => void) = null;
 
@@ -63,6 +64,10 @@ export abstract class LovelaceCard<
 
 	protected get config(): Config {
 		return this.#configSignal[0]()!;
+	}
+
+	protected get locale(): string | undefined {
+		return this.#locale();
 	}
 
 	protected setConfig(config: Exclude<Config, Function>) {
@@ -134,6 +139,7 @@ export abstract class LovelaceCard<
 		super();
 
 		this.#shadow = this.attachShadow({ mode: "open" });
+		this.#locale = createMemo(() => this.hass?.locale.language);
 	}
 
 	private connectedCallback() {

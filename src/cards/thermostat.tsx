@@ -1,4 +1,4 @@
-import { createMemo, createSignal } from "solid-js";
+import { createMemo } from "solid-js";
 import { type CardConfig, LovelaceCard, registerCard } from "../LovlaceCard";
 import {
 	fireEvent,
@@ -6,25 +6,7 @@ import {
 	type LovelaceCardEditor,
 } from "custom-card-helpers";
 import { findEntities } from "../find-entities";
-
-const style = `div * {
-	font-size: 200%;
-}
-
-span {
-	width: 4rem;
-	display: inline-block;
-	text-align: center;
-}
-
-button {
-	width: 4rem;
-	height: 4rem;
-	border: none;
-	border-radius: 10px;
-	background-color: seagreen;
-	color: white;
-}`;
+import strings from "./thermostat.icu";
 
 const TAG = "yolodev-thermostat";
 export type ThermostatCardConfig = CardConfig & {
@@ -134,7 +116,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 			.map((value) => {
 				return (
 					<>
-						<dt class="m-0">Gulv</dt>
+						<dt class="m-0">{strings.floor(this.locale)}</dt>
 						<dl class="m-0">{value} °C</dl>
 					</>
 				);
@@ -201,11 +183,13 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 				</header>
 				<section class="flex items-center px-4 py-1 md:p-4 ">
 					<dl class="flex-none grid auto-rows-fr grid-cols-2 gap-y-0 gap-x-2 mt-0 mb-0">
-						<dt class="m-0">Rom</dt>
+						<dt class="m-0">{strings.current(this.locale)}</dt>
 						<dl class="m-0">{currentTemp.value} °C</dl>
 						{floorTemp.value}
-						{/* <dt class="m-0">State</dt>
-						<dl class="m-0">{hvacAction.value}</dl> */}
+						{/* <dt class="m-0">{strings.state(this.locale)}</dt>
+								<dl class="m-0">
+									{strings.state_value(this.locale, { state: hvacAction.value })}
+								</dl> */}
 					</dl>
 					<span class="block flex-auto text-title font-normal px-6 py-2 text-right thermostat-setpoint transition-colors duration-500">
 						<span class="text-setpoint">{setPoint.value}</span> <span>°C</span>

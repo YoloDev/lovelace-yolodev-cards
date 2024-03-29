@@ -4,6 +4,7 @@ import postcss from "postcss";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { createRequire } from "node:module";
+import { icuPlugin } from "./icu/plugin.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -25,6 +26,7 @@ const tailwindPlugin: Plugin = {
 			return {
 				path: filePath,
 				watchFiles: [filePath],
+				sideEffects: false,
 			};
 		});
 
@@ -48,7 +50,7 @@ const createContext = async (...extraPlugins: Plugin[]) => {
 		entryPoints: ["./src/yolodev-cards.tsx"],
 		bundle: true,
 		outdir: "dist/",
-		plugins: [solidPlugin(), tailwindPlugin, ...extraPlugins],
+		plugins: [solidPlugin(), icuPlugin, tailwindPlugin, ...extraPlugins],
 		sourcemap: "external",
 		splitting: true,
 		format: "esm",

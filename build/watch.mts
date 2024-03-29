@@ -87,5 +87,7 @@ proxy.onWebSocketMessage(
 
 proxy.listen({ port: 3000 }, () => {
 	console.log(`Server running at ${chalk.magenta("http://localhost:3000")}`);
-	open("http://localhost:3000");
+	if (process.env.OPEN_BROWSER !== "false") {
+		open("http://localhost:3000");
+	}
 });

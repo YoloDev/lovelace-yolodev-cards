@@ -1,4 +1,4 @@
-import { type JSX, createMemo } from "solid-js";
+import { type JSX } from "solid-js";
 import {
 	LovelaceCardEditor,
 	baseLovelaceCardConfig,
@@ -8,6 +8,7 @@ import { ThermostatCardConfig } from "./thermostat";
 import { assign, object, optional, string } from "superstruct";
 import type { HaFormSchema, SchemaUnion } from "../hass/form";
 import { fireEvent } from "custom-card-helpers";
+import strings from "./thermostat.icu";
 
 await loadEditorForCard({ type: "thermostat", entity: "climate.__fake" });
 
@@ -37,17 +38,18 @@ class ThermostatEditor extends LovelaceCardEditor<ThermostatCardConfig> {
 		// });
 
 		const computeLabelCallback = (schema: SchemaUnion<typeof SCHEMA>) => {
-			if (schema.name === `toggle_entity`) {
-				return "Toggle Entity (Optional)";
+			switch (schema.name) {
+				case "entity":
+					return strings.editor_entity(this.locale);
+				case "name":
+					return strings.editor_name(this.locale);
+				case "toggle_entity":
+					return strings.editor_toggle_entity(this.locale);
+				case "floor_temp_entity":
+					return strings.editor_floor_temp_entity(this.locale);
+				default:
+					assertNever(schema);
 			}
-
-			if (schema.name === "floor_temp_entity") {
-				return "Floor Temp Entity (Optional)";
-			}
-
-			return this.hass!.localize(
-				`ui.panel.lovelace.editor.card.generic.${schema.name}`,
-			);
 		};
 
 		const valueChanged = (ev: CustomEvent) => {
@@ -63,21 +65,6 @@ class ThermostatEditor extends LovelaceCardEditor<ThermostatCardConfig> {
 					prop:computeLabel={computeLabelCallback}
 					on:value-changed={valueChanged}
 				/>
-				{/* <mwc-select
-					naturalMenuWidth
-					fixedMenuPosition
-					label="Entity (Required)"
-					// configValue="entity"
-					value={this.config.entity}
-					on:selected={(e: FormDataEvent) => {
-						this.config.entity = e.target.value;
-					}}
-					on:closed={(e: Event) => {
-						e.stopPropagation();
-					}}
-				>
-					{items()}
-				</mwc-select> */}
 			</>
 		);
 	}
@@ -85,6 +72,12 @@ class ThermostatEditor extends LovelaceCardEditor<ThermostatCardConfig> {
 
 export const tag = "yolodev-thermostat-editor";
 customElements.define(tag, ThermostatEditor);
+
+const assertNever = (value: never): never => {
+	throw new Error(
+		`Unhandled discriminated union member: ${JSON.stringify(value)}`,
+	);
+};
 
 declare module "solid-js" {
 	namespace JSX {
