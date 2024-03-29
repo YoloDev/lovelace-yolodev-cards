@@ -1,6 +1,6 @@
 current:
-  en: "Current"
-  nb: "Nåværende"
+  en: "Room"
+  nb: "Rom"
 
 floor:
   en: "Floor"
@@ -38,7 +38,7 @@ editor_name:
 
 editor_toggle_entity:
   en: "Toggle Entity (Optional)"
-  nb: "Av/paa Enhet (valgfritt)"
+  nb: "Av/på Enhet (valgfritt)"
 
 editor_floor_temp_entity:
   en: "Floor Temperature Entity (Optional)"
