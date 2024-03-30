@@ -23,21 +23,20 @@ const cardConfigStruct = assign(
 
 const SCHEMA = [
 	{ name: "entity", selector: { entity: { domain: "climate" } } },
-	{ name: "name", selector: { text: {} } },
+	{
+		type: "grid",
+		name: "",
+		schema: [
+			{ name: "name", selector: { text: {} } },
+			{ name: "show_status", type: "boolean", default: false },
+		],
+	},
 	{ name: "toggle_entity", selector: { entity: { domain: "switch" } } },
 	{ name: "floor_temp_entity", selector: { entity: { domain: "sensor" } } },
 ] as const satisfies readonly HaFormSchema[];
 
 class ThermostatEditor extends LovelaceCardEditor<ThermostatCardConfig> {
 	render(): JSX.Element {
-		// const items = createMemo(() => {
-		// 	const entities = Object.keys(this.hass.states);
-
-		// 	return entities.map((entity) => {
-		// 		return <mwc-list-item value={entity}>{entity}</mwc-list-item>;
-		// 	});
-		// });
-
 		const computeLabelCallback = (schema: SchemaUnion<typeof SCHEMA>) => {
 			switch (schema.name) {
 				case "entity":
@@ -48,7 +47,13 @@ class ThermostatEditor extends LovelaceCardEditor<ThermostatCardConfig> {
 					return localize(strings.toggle_entity);
 				case "floor_temp_entity":
 					return localize(strings.floor_temp_entity);
+				case "show_status":
+					return localize(strings.show_status);
 				default:
+					if ((schema as any).name === "") {
+						return "";
+					}
+
 					assertNever(schema);
 			}
 		};

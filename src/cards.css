@@ -500,68 +500,118 @@
 	@tailwind utilities;
 
 	.thermostat-card {
-		--active-state-color: var(--state-climate-off-color);
-		--state-color: color-mix(
+		--yolodev-thermostat-base-color: var(--state-climate-off-color, #44739e);
+		--yolodev-thermostat-setpoint-color: currentColor;
+		--yolodev-thermostat-icon-color: color-mix(
 			in srgb,
-			var(--active-state-color) 50%,
+			currentColor 20%,
 			transparent
 		);
-		--icon-color: color-mix(in srgb, currentColor 20%, transparent);
-		--setpoint-color: currentColor;
+		--yolodev-thermostat-slider-color: color-mix(
+			in srgb,
+			var(--yolodev-thermostat-base-color) 50%,
+			transparent
+		);
+		--yolodev-thermostat-highlight-opacity: 0%;
+		position: relative;
 
-		&.state-auto {
-			--active-state-color: var(--state-climate-auto-color);
-		}
-
-		&.state-cool {
-			--active-state-color: var(--state-climate-cool-color);
-		}
-
-		&.state-dry {
-			--active-state-color: var(--state-climate-dry-color);
-		}
-
-		&.state-fan_only {
-			--active-state-color: var(--state-climate-fan_only-color);
-		}
-
-		&.state-heat {
-			--active-state-color: var(--state-climate-heat-color);
-		}
-
-		&.state-heat-cool {
-			--active-state-color: var(--state-climate-heat-cool-color);
-		}
-
-		&.active {
-			--state-color: var(--active-state-color);
-			--icon-color: var(--active-state-color);
-			--setpoint-color: var(--active-state-color);
-			--setpoint-color: var(--state-color);
+		&::before {
+			content: "";
+			height: 100%;
+			width: 100%;
+			opacity: var(--yolodev-thermostat-highlight-opacity);
+			transition: opacity 3s;
+			position: absolute;
+			pointer-events: none;
 			background: radial-gradient(
 				circle at right,
-				color-mix(in srgb, var(--state-color) 30%, transparent),
+				color-mix(
+					in srgb,
+					var(--yolodev-thermostat-base-color) 30%,
+					transparent
+				),
 				transparent 50%
 			);
 		}
 
+		&.state-auto {
+			--yolodev-thermostat-base-color: var(--state-climate-auto-color);
+		}
+
+		&.state-cool {
+			--yolodev-thermostat-base-color: var(--state-climate-cool-color);
+		}
+
+		&.state-dry {
+			--yolodev-thermostat-base-color: var(--state-climate-dry-color);
+		}
+
+		&.state-fan_only {
+			--yolodev-thermostat-base-color: var(--state-climate-fan_only-color);
+		}
+
+		&.state-heat {
+			--yolodev-thermostat-base-color: var(--state-climate-heat-color);
+		}
+
+		&.state-heat-cool {
+			--yolodev-thermostat-base-color: var(--state-climate-heat-cool-color);
+		}
+
+		&.active {
+			--yolodev-thermostat-icon-color: var(--yolodev-thermostat-base-color);
+			--yolodev-thermostat-setpoint-color: var(--yolodev-thermostat-base-color);
+			--yolodev-thermostat-highlight-opacity: 100%;
+		}
+
 		&.state-unavailable {
-			--active-state-color: var(--state-unavailable-color);
-			--state-color: var(--state-unavailable-color);
-			--icon-color: var(--state-unavailable-color);
+			--yolodev-thermostat-base-color: var(--state-unavailable-color);
+			--yolodev-thermostat-icon-color: var(--state-unavailable-color);
+			--yolodev-thermostat-setpoint-color: var(--state-unavailable-color);
+			--yolodev-thermostat-slider-color: var(--state-unavailable-color);
+		}
+
+		& .thermostat-icon {
+			color: var(--yolodev-thermostat-icon-color);
+		}
+
+		& .control-slider {
+			--control-slider-color: var(--yolodev-thermostat-slider-color);
+			--control-slider-tooltip-font-size: 18px;
+		}
+
+		& .thermostat-setpoint {
+			color: var(--yolodev-thermostat-setpoint-color);
 		}
 	}
+}
 
-	.thermostat-icon {
-		color: var(--icon-color);
-	}
+@property --yolodev-thermostat-base-color {
+	syntax: "<color>";
+	initial-value: #44739e;
+	inherits: true;
+}
 
-	.control-slider {
-		--control-slider-color: var(--state-color);
-		--control-slider-tooltip-font-size: 18px;
-	}
+@property --yolodev-thermostat-icon-color {
+	syntax: "<color>";
+	initial-value: black;
+	inherits: true;
+}
 
-	.active .thermostat-setpoint {
-		color: var(--setpoint-color);
-	}
+@property --yolodev-thermostat-setpoint-color {
+	syntax: "<color>";
+	initial-value: currentColor;
+	inherits: true;
+}
+
+@property --yolodev-thermostat-highlight-opacity {
+	syntax: "<percentage>";
+	initial-value: 100%;
+	inherits: true;
+}
+
+@property --yolodev-thermostat-slider-color {
+	syntax: "<color>";
+	initial-value: currentColor;
+	inherits: true;
 }

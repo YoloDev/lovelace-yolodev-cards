@@ -23,7 +23,7 @@ export type ThermostatCardConfig = CardConfig & {
 	floor_temp_entity?: string | null;
 	// theme?: string;
 	name?: string;
-	// show_current_as_primary?: boolean;
+	show_status?: boolean;
 	// features?: LovelaceCardFeatureConfig[];
 };
 
@@ -218,6 +218,26 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 					}),
 		);
 
+		const statusRow = createMemo(() => {
+			if (!this.config.show_status) {
+				return null;
+			}
+
+			return (
+				<>
+					<dt class="m-0">
+						<Localized message={strings.state} />
+					</dt>
+					<dl class="m-0">
+						<Localized
+							message={strings.state_value}
+							args={{ state: hvacAction.value }}
+						/>
+					</dl>
+				</>
+			);
+		});
+
 		const incTemp = () => {
 			const fn = incTempAccessor.value;
 			if (fn) {
@@ -248,103 +268,103 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 		};
 
 		return (
-			<ha-card
-				classList={{
-					"thermostat-card @container/card": true,
-					"state-off": entity.state === "off",
-					"state-auto": entity.state === "auto",
-					"state-cool": entity.state === "cool",
-					"state-dry": entity.state === "dry",
-					"state-fan_only": entity.state === "fan_only",
-					"state-heat": entity.state === "heat",
-					"state-heat-cool": entity.state === "heat-cool",
-					"state-unavailable": entity.state === "unavailable",
-					active: isActive(),
-				}}
-			>
-				<header class="flex gap-2 items-center pt-6 pb-1 md:pb-4 px-4">
-					<ha-icon
-						icon="mdi:heat-wave"
-						class="flex-none transition-colors duration-500 thermostat-icon cursor-pointer"
-						on:click={openMoreInfo}
-					/>
-					<h2
-						class="flex-auto text-title font-normal m-0 cursor-pointer"
-						on:click={openMoreInfo}
-					>
-						{name()}
-					</h2>
-					<div class="flex-none">{toggle.value}</div>
-				</header>
-				<section class="flex items-center px-4 py-1 md:p-4 ">
-					<dl class="flex-none grid auto-rows-fr grid-cols-2 gap-y-0 gap-x-2 mt-0 mb-0">
-						<dt class="m-0">
-							<Localized message={strings.current} />
-						</dt>
-						{/* <dl class="m-0">{currentTemp.value} °C</dl> */}
-						<dl class="m-0">
-							<Localized
-								message={strings.temp_value}
-								args={{ value: currentTemp.value }}
-							/>
+			<ha-card>
+				<div
+					classList={{
+						"thermostat-card @container/card": true,
+						"state-off": entity.state === "off",
+						"state-auto": entity.state === "auto",
+						"state-cool": entity.state === "cool",
+						"state-dry": entity.state === "dry",
+						"state-fan_only": entity.state === "fan_only",
+						"state-heat": entity.state === "heat",
+						"state-heat-cool": entity.state === "heat-cool",
+						"state-unavailable": entity.state === "unavailable",
+						active: isActive(),
+					}}
+				>
+					<header class="flex gap-2 items-center pt-6 pb-1 md:pb-4 px-4">
+						<ha-icon
+							icon="mdi:heat-wave"
+							class="flex-none transition-colors duration-500 thermostat-icon cursor-pointer"
+							on:click={openMoreInfo}
+						/>
+						<h2
+							class="flex-auto text-title font-normal m-0 cursor-pointer"
+							on:click={openMoreInfo}
+						>
+							{name()}
+						</h2>
+						<div class="flex-none">{toggle.value}</div>
+					</header>
+					<section class="flex items-center px-4 py-1 md:p-4 ">
+						<dl class="flex-none grid auto-rows-fr grid-cols-2 gap-y-0 gap-x-2 mt-0 mb-0">
+							<dt class="m-0">
+								<Localized message={strings.current} />
+							</dt>
+							{/* <dl class="m-0">{currentTemp.value} °C</dl> */}
+							<dl class="m-0">
+								<Localized
+									message={strings.temp_value}
+									args={{ value: currentTemp.value }}
+								/>
+							</dl>
+							{floorTemp.value}
+							{statusRow()}
 						</dl>
-						{floorTemp.value}
-						{/* <dt class="m-0">{strings.state(this.locale)}</dt>
-								<dl class="m-0">
-									{strings.state_value(this.locale, { state: hvacAction.value })}
-								</dl> */}
-					</dl>
-					<span class="block flex-auto text-title font-normal px-6 py-2 text-right thermostat-setpoint transition-colors duration-500 flex gap-2 items-center justify-end">
-						<button
-							class="@sm/card:inline-block hidden px-2 flex-none"
-							on:click={decTemp}
-						>
-							-
-						</button>
-						<data value={setPoint.value} class="flex-none">
-							<Localized
-								message={strings.temp_value}
-								args={{ value: setPoint.value }}
-								markup={{
-									temp: (value) => (
-										<span
-											classList={{
-												"text-setpoint transition-colors": true,
-												"text-error": isPending(),
-											}}
-										>
-											{value}
-										</span>
-									),
-									unit: (value) => <span>{value}</span>,
-								}}
-							/>
-						</data>
-						<button
-							class="@sm/card:inline-block hidden px-2 flex-none"
-							on:click={incTemp}
-						>
-							+
-						</button>
-					</span>
-				</section>
-				<section class="px-4 pt-1 pb-4 md:p-4">
-					<ha-control-slider
-						class="transition-colors duration-500 control-slider"
-						unit="°C"
-						value={slider.value?.setPoint}
-						step={slider.value?.stepSize}
-						min={slider.value?.minTemp}
-						max={slider.value?.maxTemp}
-						disabled={isPending()}
-						on:value-changed={(ev: CustomEvent) => {
-							this.callService("climate", "set_temperature", {
-								entity_id: entity.value!.entity_id,
-								temperature: ev.detail.value,
-							});
-						}}
-					/>
-				</section>
+						<span class="block flex-auto text-title font-normal px-6 py-2 text-right thermostat-setpoint transition-colors duration-500 flex gap-4 items-center justify-end">
+							<button
+								class="@sm/card:inline-block hidden px-2 flex-none"
+								on:click={decTemp}
+							>
+								-
+							</button>
+							<data value={setPoint.value} class="flex-none">
+								<Localized
+									message={strings.temp_value}
+									args={{ value: setPoint.value }}
+									markup={{
+										temp: (value) => (
+											<span
+												classList={{
+													"text-setpoint transition-colors thermostat-setpoint":
+														true,
+													"text-error": isPending(),
+												}}
+											>
+												{value}
+											</span>
+										),
+										unit: (value) => <span>{value}</span>,
+									}}
+								/>
+							</data>
+							<button
+								class="@sm/card:inline-block hidden px-2 flex-none"
+								on:click={incTemp}
+							>
+								+
+							</button>
+						</span>
+					</section>
+					<section class="px-4 pt-1 pb-4 md:p-4">
+						<ha-control-slider
+							class="transition-colors duration-500 control-slider"
+							unit="°C"
+							value={slider.value?.setPoint}
+							step={slider.value?.stepSize}
+							min={slider.value?.minTemp}
+							max={slider.value?.maxTemp}
+							disabled={isPending()}
+							on:value-changed={(ev: CustomEvent) => {
+								this.callService("climate", "set_temperature", {
+									entity_id: entity.value!.entity_id,
+									temperature: ev.detail.value,
+								});
+							}}
+						/>
+					</section>
+				</div>
 			</ha-card>
 		);
 	}

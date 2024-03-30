@@ -13,3 +13,7 @@ toggle_entity:
 floor_temp_entity:
   en: "Floor Temperature Entity (Optional)"
   nb: "Gulvtemperatur Enhet (valgfritt)"
+
+show_status:
+  en: "Show status row"
+  nb: "Vis status rad"
