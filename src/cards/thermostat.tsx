@@ -68,35 +68,25 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 
 		const isPending = () => pendingTemp() !== null;
 
-		let pendingTimeout: NodeJS.Timeout | undefined;
-		createComputed(
-			on(pendingTemp, (value) => {
-				if (pendingTimeout) {
-					clearTimeout(pendingTimeout);
-					pendingTimeout = void 0;
-				}
-
-				if (value === null) {
-					return;
-				}
-
-				pendingTimeout = setTimeout(() => {
-					const entity_id = entity.value?.entity_id;
-					if (entity_id) {
-						this.callService("climate", "set_temperature", {
-							entity_id,
-							temperature: value,
-						});
-					}
-				}, 1_000);
-			}),
-		);
-
-		onCleanup(() => {
-			if (pendingTimeout) {
-				clearTimeout(pendingTimeout);
-				pendingTimeout = void 0;
+		createEffect(() => {
+			const value = pendingTemp();
+			if (value === null) {
+				return;
 			}
+
+			const timeout = setTimeout(() => {
+				const entity_id = entity.value?.entity_id;
+				if (entity_id) {
+					this.callService("climate", "set_temperature", {
+						entity_id,
+						temperature: value,
+					});
+				}
+			}, 1_000);
+
+			onCleanup(() => {
+				clearTimeout(timeout);
+			});
 		});
 
 		const tempAttr = entity.attribute("temperature");
