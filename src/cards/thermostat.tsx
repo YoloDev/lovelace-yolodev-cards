@@ -1,4 +1,11 @@
-import { createMemo } from "solid-js";
+import {
+	createComputed,
+	createEffect,
+	createMemo,
+	createSignal,
+	on,
+	onCleanup,
+} from "solid-js";
 import { type CardConfig, LovelaceCard, registerCard } from "../LovlaceCard";
 import {
 	fireEvent,
@@ -7,6 +14,7 @@ import {
 } from "custom-card-helpers";
 import { findEntities } from "../find-entities";
 import strings from "./thermostat.icu";
+import { Localized } from "src/Localized";
 
 const TAG = "yolodev-thermostat";
 export type ThermostatCardConfig = CardConfig & {
@@ -56,6 +64,52 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 		const entity = super.entity((config) => config.entity);
 		const toggleEntity = super.entity((config) => config.toggle_entity);
 		const floorTempEntity = super.entity((config) => config.floor_temp_entity);
+		const [pendingTemp, setPendingTemp] = createSignal<number | null>(null);
+
+		const isPending = () => pendingTemp() !== null;
+
+		let pendingTimeout: NodeJS.Timeout | undefined;
+		createComputed(
+			on(pendingTemp, (value) => {
+				if (pendingTimeout) {
+					clearTimeout(pendingTimeout);
+					pendingTimeout = void 0;
+				}
+
+				if (value === null) {
+					return;
+				}
+
+				pendingTimeout = setTimeout(() => {
+					const entity_id = entity.value?.entity_id;
+					if (entity_id) {
+						this.callService("climate", "set_temperature", {
+							entity_id,
+							temperature: value,
+						});
+					}
+				}, 1_000);
+			}),
+		);
+
+		onCleanup(() => {
+			if (pendingTimeout) {
+				clearTimeout(pendingTimeout);
+				pendingTimeout = void 0;
+			}
+		});
+
+		const tempAttr = entity.attribute("temperature");
+		createEffect(
+			on(
+				() => tempAttr.value,
+				(value, prev) => {
+					if (value !== prev) {
+						setPendingTemp(null);
+					}
+				},
+			),
+		);
 
 		const name = createMemo(() => {
 			const config = this.config;
@@ -94,16 +148,23 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 				return void 0;
 			}
 
-			return num.toFixed(1);
+			return num;
 		});
-		const setPoint = entity.attribute("temperature").map((value) => {
+
+		const setPoint = tempAttr.map((value) => {
+			const pending = pendingTemp();
+			if (pending !== null) {
+				return pending;
+			}
+
 			const num = Number.parseFloat(value);
 			if (Number.isNaN(num)) {
 				return void 0;
 			}
 
-			return num.toFixed(1);
+			return num;
 		});
+
 		const floorTemp = floorTempEntity.stateAccessor
 			.map((value) => {
 				const num = Number.parseFloat(value);
@@ -111,13 +172,17 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 					return void 0;
 				}
 
-				return num.toFixed(1);
+				return num;
 			})
 			.map((value) => {
 				return (
 					<>
-						<dt class="m-0">{strings.floor(this.locale)}</dt>
-						<dl class="m-0">{value} °C</dl>
+						<dt class="m-0">
+							<Localized message={strings.floor} />
+						</dt>
+						<dl class="m-0">
+							<Localized message={strings.temp_value} args={{ value }} />
+						</dl>
 					</>
 				);
 			});
@@ -137,6 +202,46 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 			return { setPoint, minTemp, maxTemp, stepSize };
 		});
 
+		const incTempAccessor = slider.map(
+			({ stepSize, setPoint, maxTemp }) =>
+				() =>
+					setPendingTemp((prev) => {
+						const newValue = (prev ?? setPoint) + stepSize;
+						if (newValue > maxTemp) {
+							return maxTemp;
+						}
+
+						return newValue;
+					}),
+		);
+
+		const decTempAccessor = slider.map(
+			({ stepSize, setPoint, minTemp }) =>
+				() =>
+					setPendingTemp((prev) => {
+						const newValue = (prev ?? setPoint) - stepSize;
+						if (newValue < minTemp) {
+							return minTemp;
+						}
+
+						return newValue;
+					}),
+		);
+
+		const incTemp = () => {
+			const fn = incTempAccessor.value;
+			if (fn) {
+				fn();
+			}
+		};
+
+		const decTemp = () => {
+			const fn = decTempAccessor.value;
+			if (fn) {
+				fn();
+			}
+		};
+
 		const isActive = () => {
 			const state = hvacAction.value;
 			if (state === "idle" || !state) {
@@ -155,7 +260,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 		return (
 			<ha-card
 				classList={{
-					"thermostat-card": true,
+					"thermostat-card @container/card": true,
 					"state-off": entity.state === "off",
 					"state-auto": entity.state === "auto",
 					"state-cool": entity.state === "cool",
@@ -183,16 +288,54 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 				</header>
 				<section class="flex items-center px-4 py-1 md:p-4 ">
 					<dl class="flex-none grid auto-rows-fr grid-cols-2 gap-y-0 gap-x-2 mt-0 mb-0">
-						<dt class="m-0">{strings.current(this.locale)}</dt>
-						<dl class="m-0">{currentTemp.value} °C</dl>
+						<dt class="m-0">
+							<Localized message={strings.current} />
+						</dt>
+						{/* <dl class="m-0">{currentTemp.value} °C</dl> */}
+						<dl class="m-0">
+							<Localized
+								message={strings.temp_value}
+								args={{ value: currentTemp.value }}
+							/>
+						</dl>
 						{floorTemp.value}
 						{/* <dt class="m-0">{strings.state(this.locale)}</dt>
 								<dl class="m-0">
 									{strings.state_value(this.locale, { state: hvacAction.value })}
 								</dl> */}
 					</dl>
-					<span class="block flex-auto text-title font-normal px-6 py-2 text-right thermostat-setpoint transition-colors duration-500">
-						<span class="text-setpoint">{setPoint.value}</span> <span>°C</span>
+					<span class="block flex-auto text-title font-normal px-6 py-2 text-right thermostat-setpoint transition-colors duration-500 flex gap-2 items-center justify-end">
+						<button
+							class="@sm/card:inline-block hidden px-2 flex-none"
+							on:click={decTemp}
+						>
+							-
+						</button>
+						<data value={setPoint.value} class="flex-none">
+							<Localized
+								message={strings.temp_value}
+								args={{ value: setPoint.value }}
+								markup={{
+									temp: (value) => (
+										<span
+											classList={{
+												"text-setpoint transition-colors": true,
+												"text-error": isPending(),
+											}}
+										>
+											{value}
+										</span>
+									),
+									unit: (value) => <span>{value}</span>,
+								}}
+							/>
+						</data>
+						<button
+							class="@sm/card:inline-block hidden px-2 flex-none"
+							on:click={incTemp}
+						>
+							+
+						</button>
 					</span>
 				</section>
 				<section class="px-4 pt-1 pb-4 md:p-4">
@@ -203,6 +346,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 						step={slider.value?.stepSize}
 						min={slider.value?.minTemp}
 						max={slider.value?.maxTemp}
+						disabled={isPending()}
 						on:value-changed={(ev: CustomEvent) => {
 							this.callService("climate", "set_temperature", {
 								entity_id: entity.value!.entity_id,

@@ -18,6 +18,7 @@ import {
 	createHassEntityAccessor,
 	type HassEntityAccessor,
 } from "./HassAccessor";
+import { LocaleProvider } from "./Localized";
 
 const cssPath = new URL(cssRel, import.meta.url).href;
 
@@ -64,10 +65,6 @@ export abstract class LovelaceCard<
 
 	protected get config(): Config {
 		return this.#configSignal[0]()!;
-	}
-
-	protected get locale(): string | undefined {
-		return this.#locale();
 	}
 
 	protected setConfig(config: Exclude<Config, Function>) {
@@ -158,7 +155,7 @@ export abstract class LovelaceCard<
 			});
 
 			const element = (
-				<>
+				<LocaleProvider value={this.#locale() || "en"}>
 					<Show when={ready() && cssLoaded()}>{this.render()}</Show>
 					{css()}
 					<link
@@ -166,7 +163,7 @@ export abstract class LovelaceCard<
 						href={cssPath}
 						on:load={() => setCssLoaded(true)}
 					/>
-				</>
+				</LocaleProvider>
 			);
 
 			insert(this.#shadow, element);

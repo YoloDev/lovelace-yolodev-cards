@@ -8,7 +8,8 @@ import { ThermostatCardConfig } from "./thermostat";
 import { assign, object, optional, string } from "superstruct";
 import type { HaFormSchema, SchemaUnion } from "../hass/form";
 import { fireEvent } from "custom-card-helpers";
-import strings from "./thermostat.icu";
+import strings from "./thermostat_editor.icu";
+import { localize } from "src/Localized";
 
 await loadEditorForCard({ type: "thermostat", entity: "climate.__fake" });
 
@@ -40,13 +41,13 @@ class ThermostatEditor extends LovelaceCardEditor<ThermostatCardConfig> {
 		const computeLabelCallback = (schema: SchemaUnion<typeof SCHEMA>) => {
 			switch (schema.name) {
 				case "entity":
-					return strings.editor_entity(this.locale);
+					return localize(strings.entity);
 				case "name":
-					return strings.editor_name(this.locale);
+					return localize(strings.name);
 				case "toggle_entity":
-					return strings.editor_toggle_entity(this.locale);
+					return localize(strings.toggle_entity);
 				case "floor_temp_entity":
-					return strings.editor_floor_temp_entity(this.locale);
+					return localize(strings.floor_temp_entity);
 				default:
 					assertNever(schema);
 			}

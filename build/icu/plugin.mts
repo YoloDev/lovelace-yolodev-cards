@@ -11,6 +11,7 @@ import {
 	validate,
 	MessageDataModelError,
 } from "messageformat";
+import { format, resolveConfig } from "prettier";
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
@@ -56,7 +57,14 @@ export const icuPlugin: Plugin = {
 			});
 
 			const errors: PartialMessage[] = [];
-			const contents = parseDoc(doc, errors, args.path, lines);
+			const fakePath = changeExtension(args.path, ".ts");
+			const prettierConfig = await resolveConfig(fakePath, {
+				editorconfig: true,
+			});
+			const contents = await format(parseDoc(doc, errors, args.path, lines), {
+				...(prettierConfig ?? {}),
+				filepath: fakePath,
+			});
 
 			return {
 				contents,
@@ -315,4 +323,9 @@ const calculateTrueOffset = (
 	}
 
 	return offset + newLineCount * indentation;
+};
+
+const changeExtension = (file: string, ext: string): string => {
+	const { dir, name } = path.parse(file);
+	return path.format({ dir, name, ext });
 };

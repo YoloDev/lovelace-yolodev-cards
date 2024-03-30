@@ -28,18 +28,6 @@ state_value:
     off {{Av}}
     * {{{$state}}}
 
-editor_entity:
-  en: "Entity"
-  nb: "Enhet"
-
-editor_name:
-  en: "Name (Optional)"
-  nb: "Navn (valgfritt)"
-
-editor_toggle_entity:
-  en: "Toggle Entity (Optional)"
-  nb: "Av/på Enhet (valgfritt)"
-
-editor_floor_temp_entity:
-  en: "Floor Temperature Entity (Optional)"
-  nb: "Gulvtemperatur Enhet (valgfritt)"
+temp_value:
+  en: "{#temp}{$value :number minimumIntegerDigits=2 minimumFractionDigits=1 maximumFractionDigits=1}{/temp} {#unit}°C{/unit}"
+  nb: "{#temp}{$value :number minimumIntegerDigits=2 minimumFractionDigits=1 maximumFractionDigits=1}{/temp} {#unit}°C{/unit}"

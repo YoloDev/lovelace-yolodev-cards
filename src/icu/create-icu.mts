@@ -1,4 +1,4 @@
-import { type Message, MessageFormat } from "messageformat";
+import { type Message, MessageFormat, MessagePart } from "messageformat";
 import { lookup } from "bcp-47-match";
 
 class LocaleLookup {
@@ -28,7 +28,7 @@ class LocaleLookup {
 			throw new Error(`Could not find locale for ${locale}`);
 		}
 
-		const messageFormat = new MessageFormat(message, found);
+		const messageFormat = new MessageFormat(message, [locale, found]);
 		this.cache.set(locale, messageFormat);
 		return messageFormat;
 	}
@@ -39,10 +39,16 @@ type IcuEntry = {
 	readonly message: Message;
 };
 
-export type MessageFactory = (
-	locale: string | undefined,
-	msgParams?: Record<string, unknown>,
-) => string;
+export type MessageFactory = {
+	toString: (
+		locale: string | undefined,
+		msgParams?: Record<string, unknown>,
+	) => string;
+	toParts: (
+		locale: string | undefined,
+		msgParams?: Record<string, unknown>,
+	) => MessagePart[];
+};
 
 export const createIcu = (langs: readonly IcuEntry[]): MessageFactory => {
 	const messages = new Map<string, Message>();
@@ -51,10 +57,22 @@ export const createIcu = (langs: readonly IcuEntry[]): MessageFactory => {
 	}
 
 	const localeLookup = new LocaleLookup(messages);
-
-	return (locale: string | undefined, msgParams) => {
+	const toString = (
+		locale: string | undefined,
+		msgParams?: Record<string, unknown>,
+	) => {
 		const lang = locale || "en";
 		const messageFormat = localeLookup.findMessageFormat(lang);
 		return messageFormat.format(msgParams);
 	};
+	const toParts = (
+		locale: string | undefined,
+		msgParams?: Record<string, unknown>,
+	) => {
+		const lang = locale || "en";
+		const messageFormat = localeLookup.findMessageFormat(lang);
+		return messageFormat.formatToParts(msgParams);
+	};
+
+	return Object.freeze({ toString, toParts });
 };

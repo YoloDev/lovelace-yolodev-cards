@@ -1,0 +1,15 @@
+entity:
+  en: "Entity"
+  nb: "Enhet"
+
+name:
+  en: "Name (Optional)"
+  nb: "Navn (valgfritt)"
+
+toggle_entity:
+  en: "Toggle Entity (Optional)"
+  nb: "Av/på Enhet (valgfritt)"
+
+floor_temp_entity:
+  en: "Floor Temperature Entity (Optional)"
+  nb: "Gulvtemperatur Enhet (valgfritt)"

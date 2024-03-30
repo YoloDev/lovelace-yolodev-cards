@@ -3089,10 +3089,6 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /tailwindcss@4.0.0-alpha.10:
-    resolution: {integrity: sha512-uqhOLpCddXNlgbdocMVzIn/PKxz1cQabeM0bFcn4wrXp54iif/GvVWjMZ/HhpaovF3U3hkahzHxJsrXD5FQ5xA==}
-    dev: true
-
   /tailwindcss@4.0.0-alpha.11:
     resolution: {integrity: sha512-tcRCkmHk2ACB5bghyizZG4pVA/SCr9BEE/Gbjex4axCRGQNFjbJJ3uXR/2d+ItCAUxSKYgy5LhlJc6mR8dDnrQ==}
     dev: true
