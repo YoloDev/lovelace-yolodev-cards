@@ -10,6 +10,9 @@ patchedDependencies:
     path: patches/esbuild-plugin-solid@0.5.0.patch
 
 dependencies:
+  '@mdi/js':
+    specifier: ^7.4.47
+    version: 7.4.47
   bcp-47-match:
     specifier: ^2.0.3
     version: 2.0.3
@@ -1429,6 +1432,10 @@ packages:
       '@material/theme': 14.0.0-canary.53b3cad2f.0
       tslib: 2.6.2
     dev: true
+
+  /@mdi/js@7.4.47:
+    resolution: {integrity: sha512-KPnNOtm5i2pMabqZxpUz7iQf+mfrYZyKCZ8QNz85czgEt7cuHcGorWfdzUMWYA0SD+a6Hn4FmJ+YhzzzjkTZrQ==}
+    dev: false
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}

@@ -1,5 +1,4 @@
 import {
-	createComputed,
 	createEffect,
 	createMemo,
 	createSignal,
@@ -15,6 +14,7 @@ import {
 import { findEntities } from "../find-entities";
 import strings from "./thermostat.icu";
 import { Localized } from "src/Localized";
+import { mdiMinus, mdiPlus } from "@mdi/js";
 
 const TAG = "yolodev-thermostat";
 export type ThermostatCardConfig = CardConfig & {
@@ -312,13 +312,14 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 							{floorTemp.value}
 							{statusRow()}
 						</dl>
-						<span class="block flex-auto text-title font-normal px-6 py-2 text-right thermostat-setpoint transition-colors duration-500 flex gap-4 items-center justify-end">
-							<button
-								class="@sm/card:inline-block hidden px-2 flex-none"
+						<span class="block flex-auto text-title font-normal pl-6 pr-0 py-2 text-right thermostat-setpoint transition-colors duration-500 flex gap-4 items-center justify-end">
+							<ha-outlined-icon-button
+								class="@sm/card:inline-block hidden flex-none icon-button"
 								on:click={decTemp}
 							>
-								-
-							</button>
+								<ha-svg-icon path={mdiMinus} />
+							</ha-outlined-icon-button>
+
 							<data value={setPoint.value} class="flex-none">
 								<Localized
 									message={strings.temp_value}
@@ -339,12 +340,13 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 									}}
 								/>
 							</data>
-							<button
-								class="@sm/card:inline-block hidden px-2 flex-none"
+
+							<ha-outlined-icon-button
+								class="@sm/card:inline-block hidden flex-none icon-button"
 								on:click={incTemp}
 							>
-								+
-							</button>
+								<ha-svg-icon path={mdiPlus} />
+							</ha-outlined-icon-button>
 						</span>
 					</section>
 					<section class="px-4 pt-1 pb-4 md:p-4">
@@ -378,3 +380,21 @@ registerCard(
 	},
 	ThermostatCard,
 );
+
+declare module "solid-js" {
+	namespace JSX {
+		interface IntrinsicElements {
+			"ha-outlined-icon-button": IntrinsicElements["button"];
+			"ha-svg-icon": {
+				readonly path: string;
+			};
+			"ha-control-slider": any;
+			"ha-icon": IntrinsicElements["span"] & { icon: string };
+		}
+
+		interface CustomEvents {
+			// on:____
+			click: (evt: MouseEvent) => void;
+		}
+	}
+}

@@ -509,9 +509,12 @@
 		);
 		--yolodev-thermostat-slider-color: color-mix(
 			in srgb,
-			var(--yolodev-thermostat-base-color) 50%,
+			var(--yolodev-thermostat-base-color) 100%,
 			transparent
 		);
+
+		--yolodev-thermostat-slider-color: var(--disabled-text-color);
+
 		--yolodev-thermostat-highlight-opacity: 0%;
 		position: relative;
 
@@ -582,6 +585,12 @@
 
 		& .thermostat-setpoint {
 			color: var(--yolodev-thermostat-setpoint-color);
+		}
+
+		& .icon-button {
+			--md-outlined-icon-button-container-width: 32px;
+			--md-outlined-icon-button-container-height: 32px;
+			--md-outlined-icon-button-icon-size: 32px;
 		}
 	}
 }
