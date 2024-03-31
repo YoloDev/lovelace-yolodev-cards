@@ -24,6 +24,8 @@ jobs:
   # Deploy job
   deploy:
     name: Deploy
+    # Only run if upstream
+    if: github.repository_owner == 'YoloDev'
     # Add a dependency to the build job
     needs: build
 
