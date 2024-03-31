@@ -533,6 +533,8 @@
 				),
 				transparent 50%
 			);
+			z-index: -1000;
+			border-radius: 8px;
 		}
 
 		&.state-auto {
