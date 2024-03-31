@@ -281,6 +281,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 						"state-heat-cool": entity.state === "heat-cool",
 						"state-unavailable": entity.state === "unavailable",
 						active: isActive(),
+						pending: isPending(),
 					}}
 				>
 					<header class="flex gap-2 items-center pt-6 pb-1 md:pb-4 px-4">
@@ -328,9 +329,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 										temp: (value) => (
 											<span
 												classList={{
-													"text-setpoint transition-colors thermostat-setpoint":
-														true,
-													"text-error": isPending(),
+													"text-setpoint thermostat-setpoint": true,
 												}}
 											>
 												{value}
