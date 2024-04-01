@@ -4,28 +4,20 @@ import {
 	type LovelaceCardConfig,
 } from "custom-card-helpers";
 import {
-	createSignal,
-	Signal,
-	createRoot,
-	type JSX,
 	Show,
+	Signal,
 	createMemo,
-	Accessor,
+	createRoot,
+	createSignal,
+	untrack,
+	type JSX,
 } from "solid-js";
 import { insert } from "solid-js/web";
 import cssRel from "./cards.css";
-import {
-	createHassEntityAccessor,
-	type HassEntityAccessor,
-} from "./HassAccessor";
-import { LocaleProvider } from "./Localized";
+import { HassProvider } from "./hass-context";
+import { HassEntityAccessor } from "./utils/hass-accessors";
 
 const cssPath = new URL(cssRel, import.meta.url).href;
-
-// export type HassEntityAccessor = Accessor<HassEntity | undefined> & {
-// 	get state(): string;
-// 	attribute(name: string)
-// };
 
 export type CardConfig = LovelaceCardConfig & {
 	test_gui?: boolean;
@@ -35,15 +27,14 @@ export abstract class LovelaceCard<
 	Config extends CardConfig,
 > extends HTMLElement {
 	readonly #shadow: ShadowRoot;
-	readonly #hassSignal: Signal<HomeAssistant | null> =
-		createSignal<HomeAssistant | null>(null);
+	readonly #hassSignal: Signal<HomeAssistant | undefined> =
+		createSignal<HomeAssistant>();
 	readonly #configSignal = createSignal<Config>();
 	readonly #attributeSignals: Map<string, Signal<string | null>> = new Map();
-	readonly #locale: Accessor<string | undefined>;
 
 	#dispose: null | (() => void) = null;
 
-	get #hass(): HomeAssistant | null {
+	get #hass(): HomeAssistant | undefined {
 		return this.#hassSignal[0]();
 	}
 
@@ -82,46 +73,14 @@ export abstract class LovelaceCard<
 	protected entity(
 		entity_id: (config: Config) => string | undefined | null,
 	): HassEntityAccessor {
-		const memo = createMemo(
-			() => {
-				const id = entity_id(this.config);
-				if (!id) {
-					return void 0;
-				}
+		return new HassEntityAccessor(this.#hassSignal[0], () => {
+			const config = this.config;
+			if (!config) {
+				return void 0;
+			}
 
-				const hass = this.hass;
-				if (!hass) {
-					return void 0;
-				}
-
-				const entity = hass.states[id];
-				if (!entity) {
-					return void 0;
-				}
-
-				return [entity, entity.entity_id, entity.last_updated] as const;
-			},
-			null,
-			{
-				equals: (a, b) => {
-					if (a == null || b == null) {
-						return false;
-					}
-
-					if (a[1] !== b[1]) {
-						return false;
-					}
-
-					if (a[2] !== b[2]) {
-						return false;
-					}
-
-					return true;
-				},
-			},
-		);
-
-		return createHassEntityAccessor(() => memo()?.[0]);
+			return untrack(() => entity_id(this.config) ?? void 0);
+		});
 	}
 
 	protected async callService(
@@ -136,7 +95,6 @@ export abstract class LovelaceCard<
 		super();
 
 		this.#shadow = this.attachShadow({ mode: "open" });
-		this.#locale = createMemo(() => this.hass?.locale.language);
 	}
 
 	private connectedCallback() {
@@ -155,15 +113,15 @@ export abstract class LovelaceCard<
 			});
 
 			const element = (
-				<LocaleProvider value={this.#locale() || "en"}>
+				<HassProvider value={this.#hass}>
 					<Show when={ready() && cssLoaded()}>{this.render()}</Show>
 					{css()}
 					<link
 						rel="stylesheet"
 						href={cssPath}
-						on:load={() => setCssLoaded(true)}
+						onLoad={() => setCssLoaded(true)}
 					/>
-				</LocaleProvider>
+				</HassProvider>
 			);
 
 			insert(this.#shadow, element);
@@ -228,11 +186,3 @@ export const registerCard = (
 
 	customElements.define(info.tag, constructor);
 };
-
-declare module "solid-js" {
-	namespace JSX {
-		interface IntrinsicElements {
-			"ha-card": IntrinsicElements["div"];
-		}
-	}
-}

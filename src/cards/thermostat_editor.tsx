@@ -1,15 +1,16 @@
+import { fireEvent } from "custom-card-helpers";
 import { type JSX } from "solid-js";
+import { localize } from "src/Localized";
+import { useHass } from "src/hass-context";
+import { assign, object, optional, string } from "superstruct";
 import {
 	LovelaceCardEditor,
 	baseLovelaceCardConfig,
 	loadEditorForCard,
 } from "../LovelaceCardEditor";
-import { ThermostatCardConfig } from "./thermostat";
-import { assign, object, optional, string } from "superstruct";
 import type { HaFormSchema, SchemaUnion } from "../hass/form";
-import { fireEvent } from "custom-card-helpers";
+import { ThermostatCardConfig } from "./thermostat";
 import strings from "./thermostat_editor.icu";
-import { localize } from "src/Localized";
 
 await loadEditorForCard({ type: "thermostat", entity: "climate.__fake" });
 
@@ -37,6 +38,8 @@ const SCHEMA = [
 
 class ThermostatEditor extends LovelaceCardEditor<ThermostatCardConfig> {
 	render(): JSX.Element {
+		const hass = useHass();
+
 		const computeLabelCallback = (schema: SchemaUnion<typeof SCHEMA>) => {
 			switch (schema.name) {
 				case "entity":
@@ -54,7 +57,7 @@ class ThermostatEditor extends LovelaceCardEditor<ThermostatCardConfig> {
 						return "";
 					}
 
-					assertNever(schema);
+					return assertNever(schema);
 			}
 		};
 
@@ -63,15 +66,13 @@ class ThermostatEditor extends LovelaceCardEditor<ThermostatCardConfig> {
 		};
 
 		return (
-			<>
-				<ha-form
-					hass={this.hass}
-					data={this.config}
-					schema={SCHEMA}
-					prop:computeLabel={computeLabelCallback}
-					on:value-changed={valueChanged}
-				/>
-			</>
+			<ha-form
+				hass={hass()}
+				data={this.config}
+				schema={SCHEMA}
+				computeLabel={computeLabelCallback}
+				on:value-changed={valueChanged}
+			/>
 		);
 	}
 }
@@ -84,11 +85,3 @@ const assertNever = (value: never): never => {
 		`Unhandled discriminated union member: ${JSON.stringify(value)}`,
 	);
 };
-
-declare module "solid-js" {
-	namespace JSX {
-		interface IntrinsicElements {
-			"ha-entity-picker": any;
-		}
-	}
-}

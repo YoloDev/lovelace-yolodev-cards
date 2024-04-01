@@ -1,5 +1,5 @@
+import { any, object, string } from "superstruct";
 import { CardConfig, LovelaceCard } from "./LovlaceCard";
-import { object, string, any } from "superstruct";
 
 type HTMLLovelaceCardElementConstructor = {
 	getConfigElement?: () => Promise<LovelaceCardEditor<any>>;

@@ -1,21 +1,13 @@
-import {
-	type Component,
-	type JSX,
-	createContext,
-	createMemo,
-	useContext,
-} from "solid-js";
-import { MessageFactory } from "./icu/create-icu.mjs";
+import type { FrontendLocaleData } from "custom-card-helpers";
 import {
 	type MessageLiteralPart,
 	type MessageMarkupPart,
-	type MessagePart,
 	type MessageNumberPart,
+	type MessagePart,
 } from "messageformat";
-
-const LocaleContext = createContext<string>("en");
-
-export const LocaleProvider = LocaleContext.Provider;
+import type { Component, JSX } from "solid-js";
+import { useLanguage } from "./hass-context";
+import type { MessageFactory } from "./icu/create-icu.mjs";
 
 export type MarkupFunction = (
 	children?: JSX.Element,
@@ -23,14 +15,15 @@ export type MarkupFunction = (
 ) => JSX.Element;
 
 export type LocalizedProps = {
-	readonly locale?: string;
+	readonly locale?: FrontendLocaleData;
 	readonly message: MessageFactory;
 	readonly args?: Record<string, unknown>;
 	readonly markup?: Record<string, MarkupFunction>;
 };
 
 export const Localized: Component<LocalizedProps> = (props) => {
-	const locale = () => props.locale || useContext(LocaleContext);
+	const languageAccessor = useLanguage();
+	const locale = () => languageAccessor() || "en";
 	const parts = () => {
 		const message = props.message;
 		const args = props.args;
@@ -155,6 +148,6 @@ export const localize = (
 	message: MessageFactory,
 	args?: Record<string, unknown>,
 ) => {
-	const locale = useContext(LocaleContext);
-	return message.toString(locale, args);
+	const language = useLanguage()() ?? "en";
+	return message.toString(language, args);
 };
