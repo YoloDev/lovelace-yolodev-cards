@@ -13,11 +13,12 @@ import {
 	type JSX,
 } from "solid-js";
 import { insert } from "solid-js/web";
-import cssRel from "./cards.css";
+import { path as relCssPath, properties as cssProperties } from "./cards.css";
 import { HassProvider } from "./hass-context";
 import { HassEntityAccessor } from "./utils/hass-accessors";
+import { registerCssProps } from "./utils/register-css-props";
 
-const cssPath = new URL(cssRel, import.meta.url).href;
+const cssPath = new URL(relCssPath, import.meta.url).href;
 
 export type CardConfig = LovelaceCardConfig & {
 	test_gui?: boolean;
@@ -112,15 +113,16 @@ export abstract class LovelaceCard<
 				return <style>{value}</style>;
 			});
 
+			const onCssLoaded = () => {
+				registerCssProps(cssProperties);
+				setCssLoaded(true);
+			};
+
 			const element = (
 				<HassProvider value={this.#hass}>
 					<Show when={ready() && cssLoaded()}>{this.render()}</Show>
 					{css()}
-					<link
-						rel="stylesheet"
-						href={cssPath}
-						onLoad={() => setCssLoaded(true)}
-					/>
+					<link rel="stylesheet" href={cssPath} onLoad={onCssLoaded} />
 				</HassProvider>
 			);
 

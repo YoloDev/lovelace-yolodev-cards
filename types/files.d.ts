@@ -15,6 +15,6 @@ declare module "*.icu" {
 }
 
 declare module "*.css" {
-	const css: string;
-	export default css;
+	export const path: string;
+	export const properties: readonly PropertyDefinition[];
 }
