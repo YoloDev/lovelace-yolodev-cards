@@ -9,24 +9,24 @@ const registry = (() => {
 	return registry;
 })();
 
-const assertEqual = (
+const warnIfNotEqual = (
 	registered: PropertyDefinition,
 	prop: PropertyDefinition,
 ) => {
 	if (registered.syntax !== prop.syntax) {
-		throw new Error(
+		console.warn(
 			`CSS property ${prop.name} is already registered with a different syntax.`,
 		);
 	}
 
 	if (registered.inherits !== prop.inherits) {
-		throw new Error(
+		console.warn(
 			`CSS property ${prop.name} is already registered with a different inherits value.`,
 		);
 	}
 
 	if (registered.initialValue !== prop.initialValue) {
-		throw new Error(
+		console.warn(
 			`CSS property ${prop.name} is already registered with a different initial value.`,
 		);
 	}
@@ -36,12 +36,16 @@ export const registerCssProp = (prop: PropertyDefinition) => {
 	const existing = registry.get(prop.name);
 
 	if (!existing) {
-		CSS.registerProperty(prop);
-		registry.set(prop.name, prop);
+		try {
+			CSS.registerProperty(prop);
+			registry.set(prop.name, prop);
+		} catch {
+			console.warn(`Failed to register CSS property ${prop.name}.`);
+		}
 		return;
 	}
 
-	assertEqual(existing, prop);
+	warnIfNotEqual(existing, prop);
 };
 
 export const registerCssProps = (props: readonly PropertyDefinition[]) => {
