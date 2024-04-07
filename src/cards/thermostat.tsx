@@ -7,6 +7,7 @@ import {
 import {
 	Show,
 	createEffect,
+	createMemo,
 	createSignal,
 	on,
 	onCleanup,
@@ -65,7 +66,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 	render() {
 		const locale = useLocale();
 
-		const entity = super.entity((config) => config.entity);
+		const entity = super.entity((config) => config.entity, "thermostat.entity");
 		const setPointAttribute = entity.attribute<number>("temperature");
 		const friendlyName = entity.attribute<string>("friendly_name");
 		const hvacAction = entity.attribute<string>("hvac_action");
@@ -74,8 +75,14 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 		const maxTemp = entity.attribute<number>("max_temp");
 		const targetTempStep = entity.attribute<number>("target_temp_step");
 
-		const toggleEntity = super.entity((config) => config.toggle_entity);
-		const floorTempEntity = super.entity((config) => config.floor_temp_entity);
+		const toggleEntity = super.entity(
+			(config) => config.toggle_entity,
+			"thermostat.toggle_entity",
+		);
+		const floorTempEntity = super.entity(
+			(config) => config.floor_temp_entity,
+			"thermostat.floor_temp_entity",
+		);
 
 		const [pendingTemp, setPendingTemp] = createSignal<number>();
 
@@ -104,7 +111,8 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 				return;
 			}
 
-			const entity_id = untrack(() => entity.entity_id());
+			debugger;
+			const entity_id = untrack(() => entity.entityId());
 			if (!entity_id) {
 				return;
 			}
@@ -161,7 +169,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 					checked={toggleEntity.state() === "on"}
 					on:click={() => {
 						this.callService("switch", "toggle", {
-							entity_id: toggleEntity.entity_id(),
+							entity_id: toggleEntity.entityId(),
 						});
 					}}
 				/>
@@ -182,12 +190,13 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 			</Show>
 		);
 
-		const showTemperatureControls = () =>
-			typeof entity() !== "undefined" &&
-			typeof setPointAttribute() !== "undefined" &&
-			typeof minTemp() !== "undefined" &&
-			typeof maxTemp() !== "undefined" &&
-			typeof targetTempStep() !== "undefined";
+		const showTemperatureControls = createMemo(
+			() =>
+				typeof setPointAttribute() !== "undefined" &&
+				typeof minTemp() !== "undefined" &&
+				typeof maxTemp() !== "undefined" &&
+				typeof targetTempStep() !== "undefined",
+		);
 
 		const slider = (
 			<Show when={showTemperatureControls()}>
@@ -202,7 +211,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 					disabled={isPending()}
 					on:value-changed={(ev) => {
 						this.callService("climate", "set_temperature", {
-							entity_id: entity.entity_id(),
+							entity_id: entity.entityId(),
 							temperature: ev.detail.value,
 						});
 					}}
@@ -276,7 +285,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 		};
 
 		const openMoreInfo = () => {
-			const entityId = entity.entity_id();
+			const entityId = entity.entityId();
 
 			if (entityId) {
 				fireEvent(this, "hass-more-info", {

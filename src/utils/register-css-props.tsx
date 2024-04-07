@@ -1,3 +1,11 @@
+const UA = navigator.userAgent;
+const isWebkit =
+	/AppleWebKit/.test(UA) &&
+	!/Edge\//.test(UA) &&
+	!/Chrome\//.test(UA) &&
+	!/Gecko\//.test(UA) &&
+	!(window as any).MSStream;
+
 const symbol = Symbol.for("yolodev:css:props-registry");
 const registry = (() => {
 	let registry: Map<string, PropertyDefinition> = (window as any)[symbol];
@@ -32,7 +40,23 @@ const warnIfNotEqual = (
 	}
 };
 
+const isWebkitSafe = (name: string) => {
+	switch (name) {
+		case "--tw-shadow":
+		case "--tw-inset-shadow":
+			return true;
+
+		default:
+			return false;
+	}
+};
+
 export const registerCssProp = (prop: PropertyDefinition) => {
+	if (isWebkit && !isWebkitSafe(prop.name)) {
+		console.warn(`Skipping unsafe CSS property ${prop.name}.`);
+		return;
+	}
+
 	const existing = registry.get(prop.name);
 
 	if (!existing) {
@@ -49,6 +73,13 @@ export const registerCssProp = (prop: PropertyDefinition) => {
 };
 
 export const registerCssProps = (props: readonly PropertyDefinition[]) => {
+	console.log("webkit:", isWebkit);
+	if (isWebkit) {
+		console.warn(
+			"CSS.registerProperty crashes WebKit - so we're only registering a known set of safe value.",
+		);
+	}
+
 	for (const prop of props) {
 		registerCssProp(prop);
 	}

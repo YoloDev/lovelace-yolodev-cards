@@ -49,6 +49,7 @@
 		"bcp-47-match": "^2.0.3",
 		"component-register": "^0.8.3",
 		"messageformat": "4.0.0-7",
+		"pino": "^8.20.0",
 		"solid-element": "^1.8.0",
 		"solid-js": "^1.8.16",
 		"superstruct": "^1.0.4"

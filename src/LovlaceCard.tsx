@@ -13,9 +13,13 @@ import {
 	type JSX,
 } from "solid-js";
 import { insert } from "solid-js/web";
-import { path as relCssPath, properties as cssProperties } from "./cards.css";
+import { properties as cssProperties, path as relCssPath } from "./cards.css";
 import { HassProvider } from "./hass-context";
-import { HassEntityAccessor } from "./utils/hass-accessors";
+import { createLogger } from "./logging.mjs";
+import {
+	createHassEntityAccessor,
+	type HassEntityAccessor,
+} from "./utils/hass-accessors";
 import { registerCssProps } from "./utils/register-css-props";
 
 const cssPath = new URL(relCssPath, import.meta.url).href;
@@ -24,12 +28,15 @@ export type CardConfig = LovelaceCardConfig & {
 	test_gui?: boolean;
 };
 
+const logger = createLogger("LovelaceCard");
+
 export abstract class LovelaceCard<
 	Config extends CardConfig,
 > extends HTMLElement {
 	readonly #shadow: ShadowRoot;
-	readonly #hassSignal: Signal<HomeAssistant | undefined> =
-		createSignal<HomeAssistant>();
+	readonly #hassSignal: Signal<HomeAssistant | undefined> = createSignal<
+		HomeAssistant | undefined
+	>(void 0, { name: "attr:hass", equals: false });
 	readonly #configSignal = createSignal<Config>();
 	readonly #attributeSignals: Map<string, Signal<string | null>> = new Map();
 
@@ -40,6 +47,7 @@ export abstract class LovelaceCard<
 	}
 
 	set #hass(value: HomeAssistant) {
+		logger.trace("set hass");
 		this.#hassSignal[1](value);
 	}
 
@@ -73,15 +81,20 @@ export abstract class LovelaceCard<
 
 	protected entity(
 		entity_id: (config: Config) => string | undefined | null,
+		name: string,
 	): HassEntityAccessor {
-		return new HassEntityAccessor(this.#hassSignal[0], () => {
-			const config = this.config;
-			if (!config) {
-				return void 0;
-			}
+		return createHassEntityAccessor(
+			this.#hassSignal[0],
+			() => {
+				const config = this.config;
+				if (!config) {
+					return void 0;
+				}
 
-			return untrack(() => entity_id(this.config) ?? void 0);
-		});
+				return untrack(() => entity_id(this.config) ?? void 0);
+			},
+			name,
+		);
 	}
 
 	protected async callService(
@@ -104,14 +117,9 @@ export abstract class LovelaceCard<
 
 			const [cssLoaded, setCssLoaded] = createSignal(false);
 			const ready = createMemo(() => this.ready());
-			const css = createMemo(() => {
-				const value = this.css();
-				if (!value) {
-					return null;
-				}
-
-				return <style>{value}</style>;
-			});
+			const customCss = (
+				<Show when={this.css()}>{(value) => <style>{value()}</style>}</Show>
+			);
 
 			const onCssLoaded = () => {
 				registerCssProps(cssProperties);
@@ -119,10 +127,10 @@ export abstract class LovelaceCard<
 			};
 
 			const element = (
-				<HassProvider value={this.#hass}>
+				<HassProvider value={() => this.#hass}>
 					<Show when={ready() && cssLoaded()}>{this.render()}</Show>
-					{css()}
 					<link rel="stylesheet" href={cssPath} onLoad={onCssLoaded} />
+					{customCss}
 				</HassProvider>
 			);
 
@@ -148,6 +156,7 @@ export abstract class LovelaceCard<
 		oldValue: string,
 		newValue: string,
 	) {
+		logger.trace("attributeChangedCallback", name, oldValue, newValue);
 		let signal = this.#attributeSignals.get(name);
 		if (!signal) {
 			signal = createSignal<string | null>(newValue);

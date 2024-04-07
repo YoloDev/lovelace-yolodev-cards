@@ -12,6 +12,12 @@ const createContext = async (...extraPlugins: Plugin[]) => {
 		sourcemap: "external",
 		splitting: true,
 		format: "esm",
+		define: {
+			"process.env.LOG_LEVEL": JSON.stringify(
+				process.env.LOG_LEVEL ||
+					(process.env.NODE_ENV === "production" ? '"info"' : '"debug"'),
+			),
+		},
 	});
 
 	return ctx;
