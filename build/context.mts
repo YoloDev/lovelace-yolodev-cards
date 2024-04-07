@@ -15,7 +15,7 @@ const createContext = async (...extraPlugins: Plugin[]) => {
 		define: {
 			"process.env.LOG_LEVEL": JSON.stringify(
 				process.env.LOG_LEVEL ||
-					(process.env.NODE_ENV === "production" ? '"info"' : '"debug"'),
+					(process.env.NODE_ENV === "production" ? "info" : "debug"),
 			),
 		},
 	});
