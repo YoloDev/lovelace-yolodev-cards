@@ -18,7 +18,7 @@ dependencies:
     version: 2.0.3
   component-register:
     specifier: ^0.8.3
-    version: 0.8.3
+    version: 0.8.5
   messageformat:
     specifier: 4.0.0-7
     version: 4.0.0-7
@@ -1975,8 +1975,8 @@ packages:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
     dev: true
 
-  /component-register@0.8.3:
-    resolution: {integrity: sha512-/0u8ov0WPWi2FL78rgB9aFOcfY8pJT4jP/l9NTOukGNLVQ6hk35sEJE1RkEnNQU3yk48Qr7HlDQjRQKEVfgeWg==}
+  /component-register@0.8.5:
+    resolution: {integrity: sha512-LNs+ZD2f+pyYkB0VBSVcfIS5CcH1imBSdNlJw5YHfRckIDIL7eAj5twMp9rQLmoCOtwsk610HSy22VeTyQ/4sQ==}
     dev: false
 
   /concat-map@0.0.1:
@@ -3236,7 +3236,7 @@ packages:
     peerDependencies:
       solid-js: ^1.8.0
     dependencies:
-      component-register: 0.8.3
+      component-register: 0.8.5
       solid-js: 1.8.16
     dev: false
 
