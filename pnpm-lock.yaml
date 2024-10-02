@@ -20,8 +20,8 @@ dependencies:
     specifier: ^0.8.3
     version: 0.8.3
   messageformat:
-    specifier: 4.0.0-7
-    version: 4.0.0-7
+    specifier: 4.0.0-8
+    version: 4.0.0-8
   pino:
     specifier: ^8.20.0
     version: 8.20.0
@@ -2794,8 +2794,8 @@ packages:
     engines: {node: '>= 8'}
     dev: true
 
-  /messageformat@4.0.0-7:
-    resolution: {integrity: sha512-e7Ev5SNMHQ02dZPlc2blZWum1kB2B3jGQAskO97cZd9H/Eo8BF1GMhigswTNbh/2itpbDqa0jtBz9+VcRgfiQA==}
+  /messageformat@4.0.0-8:
+    resolution: {integrity: sha512-atOhxbWHmaiLzqYUuO63PpSAfPpPz0LyHsxOhy+LyU2rVzYXpR0Ajvt5zuQT0h8p6YUUtkSN92eShQMW/452ow==}
     dev: false
 
   /micromatch@4.0.5:
