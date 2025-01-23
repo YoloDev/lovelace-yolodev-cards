@@ -27,7 +27,7 @@ dependencies:
     version: 8.20.0
   solid-element:
     specifier: ^1.8.0
-    version: 1.8.0(solid-js@1.8.16)
+    version: 1.9.1(solid-js@1.8.16)
   solid-js:
     specifier: ^1.8.16
     version: 1.8.16
@@ -1979,6 +1979,10 @@ packages:
     resolution: {integrity: sha512-/0u8ov0WPWi2FL78rgB9aFOcfY8pJT4jP/l9NTOukGNLVQ6hk35sEJE1RkEnNQU3yk48Qr7HlDQjRQKEVfgeWg==}
     dev: false
 
+  /component-register@0.8.7:
+    resolution: {integrity: sha512-clPS/o1RNfJw7L1/w4q+nkj6l7JV32kFHCx6vW5nSPOEly4B9olMeADNilEgpLV/DdeS7y8JXhHKx9YvSj8vqQ==}
+    dev: false
+
   /concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: true
@@ -3231,12 +3235,12 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /solid-element@1.8.0(solid-js@1.8.16):
-    resolution: {integrity: sha512-DG8HBCej5kNExUiFbVG8OFZojMGcLF8keXdGLEcHXBYtJ7zhm+a8HJnl5lfmBlTYGRk4ApgoBvlwH1ibg7quaQ==}
+  /solid-element@1.9.1(solid-js@1.8.16):
+    resolution: {integrity: sha512-baJy6Qz27oAUgkPlqOf3Y+7RsBiuVQrS51Nrh1ddDbrqrNPvJbIvehpUsTzLNFb2ZHIoHuNnDg330go/ZKcRdg==}
     peerDependencies:
-      solid-js: ^1.8.0
+      solid-js: ^1.9.3
     dependencies:
-      component-register: 0.8.3
+      component-register: 0.8.7
       solid-js: 1.8.16
     dev: false
 
