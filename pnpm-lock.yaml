@@ -89,7 +89,7 @@ devDependencies:
     version: 1.9.0
   dotenv:
     specifier: ^16.4.5
-    version: 16.4.5
+    version: 16.5.0
   esbuild:
     specifier: ^0.20.2
     version: 0.20.2
@@ -2065,8 +2065,8 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /dotenv@16.4.5:
-    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
+  /dotenv@16.5.0:
+    resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
     engines: {node: '>=12'}
     dev: true
 
