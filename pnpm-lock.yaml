@@ -101,7 +101,7 @@ devDependencies:
     version: 8.57.0
   home-assistant-js-websocket:
     specifier: ^9.1.0
-    version: 9.2.1
+    version: 9.5.0
   http-mitm-proxy:
     specifier: ^1.1.0
     version: 1.1.0
@@ -2454,8 +2454,8 @@ packages:
     resolution: {integrity: sha512-TnZFzF4mn5F/v0XKUTK2GMQXrn/+eQpgaSDSELl6U0HSwSbFwRhGWLz330YT+hiKMspDflamsye//RPL+zwhDw==}
     dev: true
 
-  /home-assistant-js-websocket@9.2.1:
-    resolution: {integrity: sha512-Ss9FqqHpONTNGHne/1SHv5B41dnou4ZQV9z+O9s4++l9xue5Qz4ci3IxYQhdc0zF4wu0Dhs+wYKnxun+xsHS7g==}
+  /home-assistant-js-websocket@9.5.0:
+    resolution: {integrity: sha512-gCBX0ulIPW3o5EhYxyNKgztBwNIs7u4hypZ+rcWir65wjLKL3b5uDx1jzU7RceyuANxvVKwBVLNujBeFohjnUw==}
     dev: true
 
   /html-entities@2.3.3:
