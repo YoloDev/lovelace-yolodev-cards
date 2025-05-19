@@ -1,4 +1,4 @@
-import "./cards/thermostat";
+import "./cards/thermostat/thermostat";
 import { VERSION } from "./consts";
 
 console.info(

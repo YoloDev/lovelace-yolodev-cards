@@ -1,17 +1,17 @@
+import { bcp47Normalize } from "bcp-47-normalize";
+import { type Location, type PartialMessage, type Plugin } from "esbuild";
+import {
+	MessageDataModelError,
+	type Model,
+	parseMessage,
+	stringifyMessage,
+	validate,
+} from "messageformat";
 import fs from "node:fs/promises";
 import path from "node:path";
 import url from "node:url";
-import { type PartialMessage, type Plugin, type Location } from "esbuild";
-import YAML, { LineCounter } from "yaml";
-import { bcp47Normalize } from "bcp-47-normalize";
-import {
-	type Message,
-	parseCST,
-	messageFromCST,
-	validate,
-	MessageDataModelError,
-} from "messageformat";
 import { format, resolveConfig } from "prettier";
+import YAML, { LineCounter } from "yaml";
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
@@ -98,7 +98,7 @@ class LineProvider extends LineCounter {
 
 		for (let i = 0; i < indices.length; i++) {
 			const start = indices[i];
-			const end = indices[i + 1] - 1 ?? this.#text.length - 1;
+			const end = (indices[i + 1] ?? this.#text.length) - 1;
 			lines.push(this.#text.slice(start, end));
 		}
 
@@ -173,7 +173,7 @@ const parseMessageObject = (
 	ts: string[],
 	names: string[],
 ) => {
-	const locales = new Map<string, Message>();
+	const locales = new Map<string, Model.Message>();
 
 	for (const kvp of value.items) {
 		const key = kvp.key;
@@ -225,13 +225,24 @@ const parseMessageObject = (
 			continue;
 		}
 
-		const cst = parseCST(value.value);
-		const model = messageFromCST(cst);
-		locales.set(locale, model);
+		try {
+			const messageString = value.value;
+			const model = parseMessage(messageString);
+			locales.set(locale, model);
+		} catch (e) {
+			const location = toLocation(file, value, lines);
+			errors.push({
+				text: `failed to parse message for ${name}.${key.value}: ${e}`,
+				location,
+			});
+			continue;
+		}
 
+		const model = locales.get(locale)!;
 		validate(model, (type, model) => {
 			const error = new MessageDataModelError(type, model);
 			const location = toLocation(file, value, lines, error);
+
 			errors.push({
 				text: error.message,
 				location,
@@ -241,7 +252,7 @@ const parseMessageObject = (
 
 	const result = [...locales].map((kvp) => ({
 		locale: kvp[0],
-		message: kvp[1],
+		message: stringifyMessage(kvp[1]),
 	}));
 
 	ts.push(`const ${name} = createIcu(${JSON.stringify(result)});`);

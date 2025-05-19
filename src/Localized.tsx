@@ -1,10 +1,5 @@
 import type { FrontendLocaleData } from "custom-card-helpers";
-import {
-	type MessageLiteralPart,
-	type MessageMarkupPart,
-	type MessageNumberPart,
-	type MessagePart,
-} from "messageformat";
+import { type MessageNumberPart, type MessagePart } from "messageformat";
 import type { Component, JSX } from "solid-js";
 import { useLanguage } from "./hass-context";
 import type { MessageFactory } from "./icu/create-icu.mjs";
@@ -105,31 +100,37 @@ type PartVisitor = {
 	readonly closeMarkup: (name: string) => void;
 };
 
-const walkParts = (parts: readonly MessagePart[], visitor: PartVisitor) => {
+const walkParts = (
+	parts: readonly MessagePart<never>[],
+	visitor: PartVisitor,
+) => {
 	for (const part of parts) {
 		switch (part.type) {
-			case "literal": {
-				const literalPart = part as MessageLiteralPart;
-				visitor.literal(literalPart.value);
+			case "text": {
+				visitor.literal(part.value);
 				break;
 			}
 
 			case "markup": {
-				const markupPart = part as MessageMarkupPart;
-				switch (markupPart.kind) {
+				switch (part.kind) {
 					case "open": {
-						visitor.openMarkup(markupPart.name, markupPart.options);
+						visitor.openMarkup(part.name, part.options);
 						break;
 					}
 
 					case "standalone": {
-						visitor.standaloneMarkup(markupPart.name, markupPart.options);
+						visitor.standaloneMarkup(part.name, part.options);
 						break;
 					}
 
 					case "close": {
-						visitor.closeMarkup(markupPart.name);
+						visitor.closeMarkup(part.name);
 						break;
+					}
+
+					default: {
+						const exhaustive: never = part.kind;
+						throw new Error(`Unexpected markup kind: ${exhaustive}`);
 					}
 				}
 				break;
@@ -139,6 +140,10 @@ const walkParts = (parts: readonly MessagePart[], visitor: PartVisitor) => {
 				const numberPart = part as MessageNumberPart;
 				visitor.number(numberPart.parts);
 				break;
+			}
+
+			default: {
+				throw new Error(`Unsupported part type: ${part.type}`);
 			}
 		}
 	}

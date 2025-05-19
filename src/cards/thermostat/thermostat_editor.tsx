@@ -7,8 +7,8 @@ import {
 	LovelaceCardEditor,
 	baseLovelaceCardConfig,
 	loadEditorForCard,
-} from "../LovelaceCardEditor";
-import type { HaFormSchema, SchemaUnion } from "../hass/form";
+} from "../../LovelaceCardEditor";
+import type { HaFormSchema, SchemaUnion } from "../../hass/form";
 import { ThermostatCardConfig } from "./thermostat";
 import strings from "./thermostat_editor.icu";
 

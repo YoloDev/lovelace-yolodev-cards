@@ -15,8 +15,8 @@ import {
 } from "solid-js";
 import { Localized } from "src/Localized";
 import { useLocale } from "src/hass-context";
-import { LovelaceCard, registerCard, type CardConfig } from "../LovlaceCard";
-import { findEntities } from "../find-entities";
+import { LovelaceCard, registerCard, type CardConfig } from "../../LovlaceCard";
+import { findEntities } from "../../find-entities";
 import strings from "./thermostat.icu";
 
 const TAG = "yolodev-thermostat";
@@ -111,7 +111,6 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 				return;
 			}
 
-			debugger;
 			const entity_id = untrack(() => entity.entityId());
 			if (!entity_id) {
 				return;
@@ -311,7 +310,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 						pending: isPending(),
 					}}
 				>
-					<header class="flex items-center gap-2 pt-6 px-4 pb-1 md:pb-4">
+					<header class="flex items-center gap-2 px-4 pt-6 pb-1 md:pb-4">
 						<ha-icon
 							icon="mdi:heat-wave"
 							class="thermostat-icon flex-none cursor-pointer transition-colors duration-500"
@@ -325,7 +324,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 						</h2>
 						<div class="flex-none">{toggle}</div>
 					</header>
-					<section class="flex items-center py-1 px-4 md:p-4 ">
+					<section class="flex items-center px-4 py-1 md:p-4">
 						<dl class="mt-0 mb-0 grid flex-none auto-rows-fr grid-cols-2 gap-x-2 gap-y-0">
 							<dt class="m-0">
 								<Localized message={strings.current} />
@@ -374,7 +373,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
 							</ha-outlined-icon-button>
 						</span>
 					</section>
-					<section class="pt-1 px-4 pb-4 md:p-4">{slider}</section>
+					<section class="px-4 pt-1 pb-4 md:p-4">{slider}</section>
 				</div>
 			</ha-card>
 		);

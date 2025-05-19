@@ -13,7 +13,7 @@ state:
 state_value:
   en: |
     .input {$state :string}
-    .match {$state}
+    .match $state
     idle {{Idle}}
     heating {{Heating}}
     cooling {{Cooling}}
@@ -21,7 +21,7 @@ state_value:
     * {{{$state}}}
   nb: |
     .input {$state :string}
-    .match {$state}
+    .match $state
     idle {{Idle}}
     heating {{Varmer}}
     cooling {{Kjøler}}

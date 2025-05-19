@@ -1,12 +1,12 @@
-import { type Message, MessageFormat, MessagePart } from "messageformat";
 import { lookup } from "bcp-47-match";
+import { MessageFormat, MessagePart } from "messageformat";
 
 class LocaleLookup {
 	readonly locales: string[];
-	readonly definitions: Map<string, Message>;
+	readonly definitions: Map<string, string>;
 	readonly cache: Map<string, MessageFormat>;
 
-	constructor(definitions: Map<string, Message>) {
+	constructor(definitions: Map<string, string>) {
 		this.locales = [...definitions.keys()];
 		this.definitions = definitions;
 		this.cache = new Map();
@@ -28,7 +28,7 @@ class LocaleLookup {
 			throw new Error(`Could not find locale for ${locale}`);
 		}
 
-		const messageFormat = new MessageFormat(message, [locale, found]);
+		const messageFormat = new MessageFormat([locale, found], message);
 		this.cache.set(locale, messageFormat);
 		return messageFormat;
 	}
@@ -36,7 +36,7 @@ class LocaleLookup {
 
 type IcuEntry = {
 	readonly locale: string;
-	readonly message: Message;
+	readonly message: string;
 };
 
 export type MessageFactory = {
@@ -47,11 +47,11 @@ export type MessageFactory = {
 	toParts: (
 		locale: string | undefined,
 		msgParams?: Record<string, unknown>,
-	) => MessagePart[];
+	) => MessagePart<never>[];
 };
 
 export const createIcu = (langs: readonly IcuEntry[]): MessageFactory => {
-	const messages = new Map<string, Message>();
+	const messages = new Map<string, string>();
 	for (const lang of langs) {
 		messages.set(lang.locale, lang.message);
 	}
