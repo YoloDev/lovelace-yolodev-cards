@@ -25,10 +25,10 @@ importers:
         version: 9.7.0
       solid-element:
         specifier: ^1.9.1
-        version: 1.9.1(solid-js@1.9.7)
+        version: 1.9.1(solid-js@1.9.9)
       solid-js:
         specifier: ^1.9.7
-        version: 1.9.7
+        version: 1.9.9
       superstruct:
         specifier: 2.0.2
         version: 2.0.2
@@ -68,7 +68,7 @@ importers:
         version: 0.25.4
       esbuild-plugin-solid:
         specifier: 0.6.0
-        version: 0.6.0(esbuild@0.25.4)(solid-js@1.9.7)
+        version: 0.6.0(esbuild@0.25.4)(solid-js@1.9.9)
       eslint:
         specifier: 9.27.0
         version: 9.27.0
@@ -1411,14 +1411,14 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  seroval-plugins@1.3.1:
-    resolution: {integrity: sha512-dOlUoiI3fgZbQIcj6By+l865pzeWdP3XCSLdI3xlKnjCk5983yLWPsXytFOUI0BUZKG9qwqbj78n9yVcVwUqaQ==}
+  seroval-plugins@1.3.3:
+    resolution: {integrity: sha512-16OL3NnUBw8JG1jBLUoZJsLnQq0n5Ua6aHalhJK4fMQkz1lqR7Osz1sA30trBtd9VUDc2NgkuRCn8+/pBwqZ+w==}
     engines: {node: '>=10'}
     peerDependencies:
       seroval: ^1.0
 
-  seroval@1.3.1:
-    resolution: {integrity: sha512-F+T9EQPdLzgdewgxnBh4mSc+vde+EOkU6dC9BDuu/bfGb+UyUlqM6t8znFCTPQSuai/ZcfFg0gu79h+bVW2O0w==}
+  seroval@1.3.2:
+    resolution: {integrity: sha512-RbcPH1n5cfwKrru7v7+zrZvjLurgHhGyso3HTyGtRivGWgYjbOmGuivCQaORNELjNONoK35nj28EoWul9sb1zQ==}
     engines: {node: '>=10'}
 
   shebang-command@2.0.0:
@@ -1434,8 +1434,8 @@ packages:
     peerDependencies:
       solid-js: ^1.9.3
 
-  solid-js@1.9.7:
-    resolution: {integrity: sha512-/saTKi8iWEM233n5OSi1YHCCuh66ZIQ7aK2hsToPe4tqGm7qAejU1SwNuTPivbWAYq7SjuHVVYxxuZQNRbICiw==}
+  solid-js@1.9.9:
+    resolution: {integrity: sha512-A0ZBPJQldAeGCTW0YRYJmt7RCeh5rbFfPZ2aOttgYnctHE7HgKeHCBB/PVc2P7eOfmNXqMFFFoYYdm3S4dcbkA==}
 
   sonic-boom@4.2.0:
     resolution: {integrity: sha512-INb7TM37/mAcsGmc9hyyI6+QR3rR1zVRu36B0NeGXKnOOLiZOfER5SA+N7X7k3yUYRzLWafduTDvJAfDswwEww==}
@@ -2281,13 +2281,13 @@ snapshots:
 
   entities@6.0.0: {}
 
-  esbuild-plugin-solid@0.6.0(esbuild@0.25.4)(solid-js@1.9.7):
+  esbuild-plugin-solid@0.6.0(esbuild@0.25.4)(solid-js@1.9.9):
     dependencies:
       '@babel/core': 7.27.1
       '@babel/preset-typescript': 7.27.1(@babel/core@7.27.1)
       babel-preset-solid: 1.9.6(@babel/core@7.27.1)
       esbuild: 0.25.4
-      solid-js: 1.9.7
+      solid-js: 1.9.9
     transitivePeerDependencies:
       - supports-color
 
@@ -2820,11 +2820,11 @@ snapshots:
 
   semver@7.7.2: {}
 
-  seroval-plugins@1.3.1(seroval@1.3.1):
+  seroval-plugins@1.3.3(seroval@1.3.2):
     dependencies:
-      seroval: 1.3.1
+      seroval: 1.3.2
 
-  seroval@1.3.1: {}
+  seroval@1.3.2: {}
 
   shebang-command@2.0.0:
     dependencies:
@@ -2832,16 +2832,16 @@ snapshots:
 
   shebang-regex@3.0.0: {}
 
-  solid-element@1.9.1(solid-js@1.9.7):
+  solid-element@1.9.1(solid-js@1.9.9):
     dependencies:
       component-register: 0.8.7
-      solid-js: 1.9.7
+      solid-js: 1.9.9
 
-  solid-js@1.9.7:
+  solid-js@1.9.9:
     dependencies:
       csstype: 3.1.3
-      seroval: 1.3.1
-      seroval-plugins: 1.3.1(seroval@1.3.1)
+      seroval: 1.3.2
+      seroval-plugins: 1.3.3(seroval@1.3.2)
 
   sonic-boom@4.2.0:
     dependencies:
