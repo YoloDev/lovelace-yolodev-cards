@@ -342,9 +342,9 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
               {floorTemp}
               {statusRow}
             </dl>
-            <span class="text-title thermostat-setpoint block flex flex-auto items-center justify-end gap-4 py-2 pr-0 pl-6 text-right font-normal transition-colors duration-500">
+            <span class="text-title thermostat-setpoint flex flex-auto items-center justify-end gap-4 py-2 pr-0 pl-6 text-right font-normal transition-colors duration-500">
               <ha-outlined-icon-button
-                class="icon-button hidden flex-none @sm/card:inline-block"
+                class="icon-button flex-none @sm/card:inline-block"
                 on:click={decTemp}
               >
                 <ha-svg-icon path={mdiMinus} />
@@ -370,7 +370,7 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
               </data>
 
               <ha-outlined-icon-button
-                class="icon-button hidden flex-none @sm/card:inline-block"
+                class="icon-button flex-none @sm/card:inline-block"
                 on:click={incTemp}
               >
                 <ha-svg-icon path={mdiPlus} />
