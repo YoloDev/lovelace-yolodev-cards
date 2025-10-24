@@ -47,6 +47,9 @@
 		"superstruct": "2.0.2"
 	},
 	"pnpm": {
-		"patchedDependencies": {}
+		"patchedDependencies": {},
+		"overrides": {
+			"home-assistant-js-websocket": "^9.5.0"
+		}
 	}
 }
