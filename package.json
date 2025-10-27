@@ -11,7 +11,7 @@
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
-		"@material/web": "2.3.0",
+		"@material/web": "2.4.1",
 		"@tailwindcss/postcss": "4.1.16",
 		"@types/node": "22.15.19",
 		"@types/ws": "^8.18.1",
