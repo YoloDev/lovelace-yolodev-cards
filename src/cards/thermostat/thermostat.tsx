@@ -275,16 +275,12 @@ class ThermostatCard extends LovelaceCard<ThermostatCardConfig> {
     );
 
     const isActive = () => {
-      // TODO: Fix when devireg thermostats are fixed
-      //
-      // const state = hvacAction();
-      // if (state === "idle" || !state) {
-      // 	return false;
-      // }
+      const state = hvacAction();
+      if (state === "idle" || !state) {
+        return false;
+      }
 
-      // return true;
-
-      return entity.state() !== "off";
+      return true;
     };
 
     const openMoreInfo = () => {
