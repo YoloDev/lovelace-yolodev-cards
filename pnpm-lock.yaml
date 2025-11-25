@@ -21,8 +21,8 @@ importers:
         specifier: ^0.8.8
         version: 0.8.8
       messageformat:
-        specifier: 4.0.0-13
-        version: 4.0.0-13
+        specifier: 4.0.0
+        version: 4.0.0
       pino:
         specifier: 10.1.0
         version: 10.1.0
@@ -1367,8 +1367,9 @@ packages:
     resolution: {integrity: sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==}
     engines: {node: '>= 8'}
 
-  messageformat@4.0.0-13:
-    resolution: {integrity: sha512-MpP95/VX/5pvsLOLcrDFSS3z5kmhOGL92npbM+D9N3O/qWnfl1yu0i2QbbnXzU91U0i2CruhNRdU6rgx5+bKVw==}
+  messageformat@4.0.0:
+    resolution: {integrity: sha512-XKmJ/ffTWToWOlHJzt85ZChQgVGC0LHzNWuNK8zuYpNySsB0nIEmytOdSAOW9ETKtkajAUJf520m5gFHHnrTYg==}
+    engines: {node: ^20.19 || ^22.12 || >=24}
 
   micromatch@4.0.8:
     resolution: {integrity: sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==}
@@ -2988,7 +2989,7 @@ snapshots:
 
   merge2@1.4.1: {}
 
-  messageformat@4.0.0-13: {}
+  messageformat@4.0.0: {}
 
   micromatch@4.0.8:
     dependencies:
