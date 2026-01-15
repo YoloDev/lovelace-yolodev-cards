@@ -13,7 +13,7 @@
 	"devDependencies": {
 		"@material/web": "2.4.1",
 		"@tailwindcss/postcss": "4.1.17",
-		"@types/node": "24.10.1",
+		"@types/node": "24.10.9",
 		"@types/ws": "^8.18.1",
 		"@typescript-eslint/eslint-plugin": "8.47.0",
 		"@typescript-eslint/parser": "8.47.0",
